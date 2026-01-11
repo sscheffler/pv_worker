@@ -19,8 +19,11 @@ class FirestoreService:
         # Only push every 5 seconds
         if now >= self.last_push_time + timedelta(seconds=5):
             logger.info(f"Pushing value {value} to Firestore(collection={self.settings.collection}) at {now}")
-            self.db.collection(self.settings.collection).add({
-                "value": value,
-                "time": now,
-            })
+            if value > 0:
+                self.db.collection(self.settings.collection).add({
+                    "value": value,
+                    "time": now,
+                })
+            else:
+                logger.info(f"Value {value} is 0 or negative, not pushing to Firestore")
             self.last_push_time = now
