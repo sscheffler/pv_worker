@@ -1,0 +1,80 @@
+[project]
+name = "pv_worker"
+version = "0.1.0"
+description = "Worker to forward PV data to Firestore"
+authors = [{ name = "stefanscheffler", email = "stefanscheffler82@gmail.com" }]
+requires-python = "~=3.13.0"
+dependencies = [
+    "APScheduler>=3.11.0,<4",
+    "fastapi>=0.115.8,<0.116",
+    "paho-mqtt>=2.1.0",
+    "pydantic>=2.10.6,<3",
+    "python-dotenv>=1.2.1",
+    "uvicorn>=0.34.0,<0.35",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.15.0,<2",
+    "pytest>=8.3.4,<9",
+    "pytest-asyncio>=0.25.3,<0.26",
+    "ruff>=0.9.6,<0.10",
+    "greenlet>=3.2.3",
+]
+
+[tool.uv]
+default-groups = [
+    "dev",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+[tool.ruff]
+include = ["pyproject.toml", "app/**/*.py"]
+line-length = 120
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends", "fastapi.params.Depends", "fastapi.Query", "fastapi.params.Query"]
+
+[tool.ruff.lint]
+# List of rule groups to enable:
+#  E  – pycodestyle         (basic style issues)
+#  F  – Pyflakes            (undefined names, unused code)
+#  B  – bugbear             (likely bugs & best-practice violations)
+#  I  – isort               (import ordering)
+#  C4 – comprehensions      (inefficient comprehensions)
+#  UP – pyupgrade           (outdated syntax modernisation)
+#  N  – pep8-naming         (naming conventions)
+#  S  – bandit              (security checks)
+#  PL – pylint              (general code smells & refactors)
+#  PT – pytest-style        (test-specific linting)
+#  RUF – Ruff-native rules  (extra heuristics)
+select = [
+  "E", "F", "B", "I", "C4",
+  #"UP",
+  "N", "S", "PL", "PT", "RUF"
+]
+
+# Ignore:
+# E501: Line too long check
+ignore = ["E501"]
+
+
+
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".idea", ".vscode", "scripts",
+]
+
+[tool.mypy]
+files = ["app"]
+ignore_missing_imports = true
+follow_imports = "skip"
+strict_optional = true
+show_error_codes = true
+pretty = true
