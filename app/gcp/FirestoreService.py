@@ -1,8 +1,8 @@
 from datetime import datetime, timezone
 from google.cloud import firestore
 
-from app_configuration import get_settings
-from logging_configuration import create_logger
+from app.app_configuration import get_settings
+from app.logging_configuration import create_logger
 
 logger = create_logger(name=__name__)
 

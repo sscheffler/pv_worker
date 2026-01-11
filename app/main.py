@@ -4,14 +4,16 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app.web.app_router import app_api_router
-from gcp.FirestoreService import FirestoreService
-from mqtt.mqtt_client import MqttClient
-
+from app.gcp.FirestoreService import FirestoreService
+from app.mqtt.mqtt_client import MqttClient
+from app.logging_configuration import create_logger
 
 firestore = FirestoreService()
+logger = create_logger(name=__name__)
 
 def on_message(client, userdata, msg):
     message = msg.payload.decode()
+    logger.info(f"Received message from mqtt: {message}")
     firestore.push_value(float(message))
 
 @asynccontextmanager

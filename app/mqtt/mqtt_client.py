@@ -1,8 +1,8 @@
 from paho.mqtt import client as mqtt_client
 from paho.mqtt.enums import CallbackAPIVersion
 
-from app_configuration import get_settings, MqttSettings
-from logging_configuration import create_logger
+from app.app_configuration import get_settings, MqttSettings
+from app.logging_configuration import create_logger
 
 logger = create_logger(name=__name__)
 
