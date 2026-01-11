@@ -12,7 +12,7 @@ WORKDIR $APP_HOME
 RUN adduser --disabled-password --gecos "" appuser
 
 # Copy everything including installed Python packages
-COPY --chown=appuser:appuser ./src ./src
+COPY --chown=appuser:appuser ./app ./app
 COPY --chown=appuser:appuser start.sh ./start.sh
 
 # Set permissions for the application and dependencies
@@ -23,13 +23,11 @@ RUN chmod +x start.sh && \
 # Use the non-root user for uv-related steps so cache ownership is correct
 USER appuser
 
-RUN uv tool install --prerelease=allow azure-cli@latest
-
 # Install the project's dependencies using the lockfile and settings
 RUN --mount=type=cache,target=/root/.cache/uv \
     --mount=type=bind,source=uv.lock,target=uv.lock \
     --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-    uv sync --locked --no-dev --no-group migrations
+    uv sync --locked --no-dev
 
 EXPOSE 8000
 CMD ["sh", "./start.sh"]

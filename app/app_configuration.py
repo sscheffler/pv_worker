@@ -30,10 +30,18 @@ class MqttSettings(BaseSettings):
         allow_population_by_field_name = True
         case_sensitive = False
 
+class FirestoreSettings(BaseSettings):
+    collection: str
+
+    class Config:
+        allow_population_by_field_name = True
+        case_sensitive = False
+
 
 class Settings(BaseSettings):
     APP: AppSettings
     MQTT: MqttSettings
+    FIRESTORE: FirestoreSettings
 
     class Config:
         env_name = os.environ.get("ENV")
