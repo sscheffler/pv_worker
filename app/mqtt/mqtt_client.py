@@ -15,15 +15,13 @@ class MqttClient:
         )
         self.client.on_connect = self.on_connect
         self.client.on_message = on_message
-
-    def connect(self):
         logger.info("Connecting to MQTT Broker")
         self.client.connect(self.settings.broker, self.settings.port)
+
+    def connect(self):
         self.client.loop_forever()
 
     def on_connect(self, client, userdata, flags, rc, properties):
-        if rc == 0:
-            logger.info(f"Connected to MQTT Broker {rc}!")
-        else:
+        if rc != 0:
             logger.error(f"Failed to connect, return code {rc}\n", rc)
         self.client.subscribe(self.settings.topic)

@@ -13,7 +13,6 @@ logger = create_logger(name=__name__)
 
 def on_message(client, userdata, msg):
     message = msg.payload.decode()
-    logger.info(f"Received message from mqtt: {message}")
     firestore.push_value(float(message))
 
 @asynccontextmanager
