@@ -4,11 +4,15 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app.web.app_router import app_api_router
+from gcp.FirestoreService import FirestoreService
 from mqtt.mqtt_client import MqttClient
 
 
+firestore = FirestoreService()
+
 def on_message(client, userdata, msg):
-    print(f"Topic: {msg.topic} | Wert: {msg.payload.decode()} W")
+    message = msg.payload.decode()
+    firestore.push_value(float(message))
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
