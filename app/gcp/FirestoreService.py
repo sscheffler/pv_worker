@@ -3,6 +3,7 @@ from google.cloud import firestore
 
 from app.app_configuration import get_settings
 from app.logging_configuration import create_logger
+import random
 
 logger = create_logger(name=__name__)
 
@@ -18,12 +19,15 @@ class FirestoreService:
         now = datetime.now(tz=timezone.utc)
         # Only push every 5 seconds
         if now >= self.last_push_time + timedelta(seconds=5):
-            logger.info(f"Pushing value {value} to Firestore(collection={self.settings.collection}) at {now}")
+
             if value > 0:
-                self.db.collection(self.settings.collection).add({
-                    "value": value,
-                    "time": now,
-                })
+                value_to_send = value
             else:
-                logger.info(f"Value {value} is 0 or negative, not pushing to Firestore")
+                value_to_send = round(random.uniform(1, 11), 2)
+                logger.info(f"Value {value} is 0 or negative, sending random data: {value_to_send}")
+            logger.info(f"Pushing value {value_to_send} to Firestore(collection={self.settings.collection}) at {now}")
+            self.db.collection(self.settings.collection).add({
+                "value": value_to_send,
+                "time": now,
+            })
             self.last_push_time = now
